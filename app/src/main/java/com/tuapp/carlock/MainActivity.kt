@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.*
 import com.tuapp.carlock.ui.PantallaPrincipal
 import com.tuapp.carlock.ui.PantallaHistorial
+import com.tuapp.carlock.ui.theme.CarLockTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,17 +19,19 @@ class MainActivity : ComponentActivity() {
         val cocheViewModel = ViewModelProvider(this, factory)[CocheViewModel::class.java]
 
         setContent {
-            val navController = rememberNavController()
+            CarLockTheme {
+                val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = "principal") {
-                composable("principal") {
-                    PantallaPrincipal(
-                        cocheViewModel = cocheViewModel,
-                        onHistorialClick = { navController.navigate("historial") }
-                    )
-                }
-                composable("historial") {
-                    PantallaHistorial(cocheViewModel)
+                NavHost(navController = navController, startDestination = "principal") {
+                    composable("principal") {
+                        PantallaPrincipal(
+                            cocheViewModel = cocheViewModel,
+                            onHistorialClick = { navController.navigate("historial") }
+                        )
+                    }
+                    composable("historial") {
+                        PantallaHistorial(cocheViewModel)
+                    }
                 }
             }
         }
