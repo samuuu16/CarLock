@@ -30,7 +30,10 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("historial") {
-                        PantallaHistorial(cocheViewModel)
+                        PantallaHistorial(
+                            viewModel = cocheViewModel,
+                            onVolver = { navController.popBackStack() }
+                        )
                     }
                 }
             }

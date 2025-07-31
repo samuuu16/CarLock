@@ -12,4 +12,7 @@ interface RegistroDao {
 
     @Query("SELECT * FROM registros ORDER BY timestamp DESC")
     fun obtenerTodos(): Flow<List<Registro>>
+
+    @Query("DELETE FROM registros")
+    suspend fun borrarTodos()
 }
