@@ -7,19 +7,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import com.tuapp.carlock.EstadoCoche
-import com.tuapp.carlock.Registro
+import com.tuapp.carlock.AppDatabase
+
 
 class CocheViewModel(application: Application) : AndroidViewModel(application) {
 
-    // ✅ Inicialización diferida con lazy para evitar crash
-    private val db by lazy {
-        AppDatabase.getDatabase(application)
+    // 💡 Protección contra contextos nulos
+    private val db: AppDatabase by lazy {
+        val context = getApplication<Application>()
+        requireNotNull(context) { "Application context is null en ViewModel" }
+        AppDatabase.getDatabase(context)
     }
 
-    private val dao by lazy {
+    private val dao: RegistroDao by lazy {
         db.registroDao()
     }
+
 
     private val _estado = MutableStateFlow(EstadoCoche.CERRADO)
     val estado: StateFlow<EstadoCoche> = _estado
