@@ -4,10 +4,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 
-// 🎨 Puedes personalizar estos colores si lo deseas
 private val LightColors = lightColorScheme(
-    primary = androidx.compose.ui.graphics.Color(0xFF6200EE), // purple_500
-    secondary = androidx.compose.ui.graphics.Color(0xFF03DAC5), // teal_700
+    primary = androidx.compose.ui.graphics.Color(0xFF6200EE),
+    secondary = androidx.compose.ui.graphics.Color(0xFF03DAC5),
     background = androidx.compose.ui.graphics.Color(0xFFF5F5F5),
     surface = androidx.compose.ui.graphics.Color.White,
     onPrimary = androidx.compose.ui.graphics.Color.White,
@@ -36,7 +35,7 @@ fun CarLockTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography(), // puedes personalizar esto después
+        typography = Typography(),
         content = content
     )
 }
