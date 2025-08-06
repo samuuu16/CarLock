@@ -1,19 +1,21 @@
 package com.tuapp.carlock
 
 import android.app.Application
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
-
 
 class CocheViewModel(application: Application) : AndroidViewModel(application) {
 
-    // 💡 Protección contra contextos nulos
+    private val context = getApplication<Application>()
+
     private val db: AppDatabase by lazy {
-        val context = getApplication<Application>()
         requireNotNull(context) { "Application context is null en ViewModel" }
         AppDatabase.getDatabase(context)
     }
@@ -22,11 +24,9 @@ class CocheViewModel(application: Application) : AndroidViewModel(application) {
         db.registroDao()
     }
 
-    // Estado actual del coche
     private val _estado = MutableStateFlow(EstadoCoche.CERRADO)
     val estado: StateFlow<EstadoCoche> = _estado
 
-    // Historial en memoria reactiva (MODIFICABLE)
     private val _historial = MutableStateFlow<List<Registro>>(emptyList())
     val historial: StateFlow<List<Registro>> = _historial
 
@@ -38,28 +38,26 @@ class CocheViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
     fun abrirCoche() {
         _estado.value = EstadoCoche.ABIERTO
         guardarAccion("ABRIR")
+        NotificationUtils.mostrarNotificacionCocheAbierto(context)
     }
 
     fun cerrarCoche() {
         _estado.value = EstadoCoche.CERRADO
         guardarAccion("CERRAR")
+        NotificationUtils.mostrarNotificacionCocheCerrado(context)
     }
 
     private fun guardarAccion(accion: String) {
         viewModelScope.launch {
             dao.insertar(Registro(accion = accion))
-
-            // Recargar historial
             dao.obtenerTodos().collect {
                 _historial.value = it
             }
         }
     }
-
 
     fun clearHistorial() {
         viewModelScope.launch {
